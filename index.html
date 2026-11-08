@@ -83,7 +83,7 @@
         ['./public/images/panetone-inteiro.png', 'Panetone artesanal inteiro com gotas de chocolate', 'Feito à mão'],
         ['./public/images/panetone-forno.png', 'Panetone artesanal saindo do forno', 'Fornada fresca'],
       ]
-      const whatsappMessage = encodeURIComponent('Olá! Vim pelo site dos Panetones da Casa e gostaria de fazer um pedido. Pode me informar os sabores disponíveis e a entrega?')
+      const whatsappMessage = encodeURIComponent('Olá, quero encomendar um panetone')
       document.querySelectorAll('[data-whatsapp]').forEach((link) => {
         link.href = `https://wa.me/5516991348643?text=${whatsappMessage}`
       })

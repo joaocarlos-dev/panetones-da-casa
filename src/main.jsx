@@ -55,7 +55,7 @@ const products = [
 ]
 
 const whatsappText = encodeURIComponent(
-  'Olá! Vim pelo site dos Panetones da Casa e gostaria de fazer um pedido. Pode me informar os sabores disponíveis e a entrega?'
+  'Olá, quero encomendar um panetone'
 )
 const hasWhatsApp = Boolean(WHATSAPP_NUMBER)
 const whatsappUrl = hasWhatsApp ? `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappText}` : undefined
