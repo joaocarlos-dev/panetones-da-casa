@@ -32,33 +32,42 @@ const products = [
     name: 'Pequeno',
     weight: '250 g',
     description: 'Ideal para presentear ou saborear sem pressa.',
-    plain: 'R$ 20,90',
-    ninho: 'R$ 32,90',
-    chocolate: 'R$ 34,90',
+    fillings: [
+      { name: 'Sem recheio', price: 'R$ 20,90' },
+      { name: 'Ninho', price: 'R$ 32,90' },
+      { name: 'Chocolate', price: 'R$ 34,90' },
+    ],
   },
   {
     name: 'Médio',
     weight: '500 g',
     description: 'O tamanho certo para dividir em bons encontros.',
-    plain: 'R$ 39,90',
-    ninho: 'R$ 59,90',
-    chocolate: 'R$ 64,90',
+    fillings: [
+      { name: 'Sem recheio', price: 'R$ 39,90' },
+      { name: 'Ninho', price: 'R$ 59,90' },
+      { name: 'Chocolate', price: 'R$ 64,90' },
+      { name: 'Mix', price: 'R$ 62,90' },
+    ],
   },
   {
     name: 'Grande',
     weight: '1 kg',
     description: 'Para a mesa cheia e muitos pedaços generosos.',
-    plain: 'R$ 76,90',
-    ninho: 'R$ 99,90',
-    chocolate: 'R$ 104,90',
+    fillings: [
+      { name: 'Sem recheio', price: 'R$ 76,90' },
+      { name: 'Ninho', price: 'R$ 99,90' },
+      { name: 'Chocolate', price: 'R$ 104,90' },
+      { name: 'Mix', price: 'R$ 102,90' },
+    ],
   },
 ]
 
-const whatsappText = encodeURIComponent(
-  'Olá, quero encomendar um panetone'
-)
+const defaultWhatsappMessage = 'Olá, quero encomendar um panetone'
 const hasWhatsApp = Boolean(WHATSAPP_NUMBER)
-const whatsappUrl = hasWhatsApp ? `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappText}` : undefined
+
+function getWhatsAppUrl(message = defaultWhatsappMessage) {
+  return hasWhatsApp ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}` : undefined
+}
 
 function ArrowIcon() {
   return (
@@ -77,7 +86,9 @@ function WhatsAppIcon() {
   )
 }
 
-function WhatsAppLink({ children, className }) {
+function WhatsAppLink({ children, className, message }) {
+  const whatsappUrl = getWhatsAppUrl(message)
+
   return (
     <a
       className={`${className}${hasWhatsApp ? '' : ' is-disabled'}`}
@@ -163,7 +174,7 @@ function App() {
           <div className="kit-card-content">
             <div className="kit-card-topline"><span>Kit promocional</span><span>Disponível sob encomenda</span></div>
             <h3>Para reunir<br /><em>todo mundo.</em></h3>
-            <p className="kit-description">A combinação perfeita para dividir, presentear ou guardar um pouquinho para depois.</p>
+            <p className="kit-description">Os dois panetones do kit são recheados. Escolha Ninho ou Chocolate para dividir, presentear ou guardar um pouquinho para depois.</p>
             <div className="kit-details">
               <div><strong>01</strong><span>Panetone grande<br />1 kg</span></div>
               <div><strong>01</strong><span>Panetone pequeno<br />250 g</span></div>
@@ -171,8 +182,12 @@ function App() {
             </div>
             <div className="price-row">
               <div className="kit-prices">
-                <div><small>Ninho</small><strong>R$ 110</strong></div>
-                <div><small>Chocolate</small><strong>R$ 115</strong></div>
+                <WhatsAppLink className="kit-price-link" message="Olá, quero reservar o Kit Família recheado com Ninho.">
+                  <small>Ninho</small><strong>R$ 110</strong>
+                </WhatsAppLink>
+                <WhatsAppLink className="kit-price-link" message="Olá, quero reservar o Kit Família recheado com Chocolate.">
+                  <small>Chocolate</small><strong>R$ 115</strong>
+                </WhatsAppLink>
               </div>
               <WhatsAppLink className="button button-dark">
                 Reservar o kit <WhatsAppIcon />
@@ -188,7 +203,7 @@ function App() {
             <p className="eyebrow">Escolha o seu</p>
             <h2>Tem um tamanho<br /><em>para cada mesa.</em></h2>
           </div>
-          <p>Todos os tamanhos disponíveis com preço sem recheio, com recheio de Ninho ou com recheio de chocolate.</p>
+          <p>Escolha o tamanho, clique no preço do sabor desejado e envie seu pedido direto pelo WhatsApp.</p>
         </div>
         <div className="product-grid">
           {products.map((product, index) => (
@@ -197,11 +212,18 @@ function App() {
               <h3>{product.name}</h3>
               <p>{product.description}</p>
               <div className="product-prices">
-                <div><span>Sem recheio</span><strong>{product.plain}</strong></div>
-                <div><span>Recheio Ninho</span><strong>{product.ninho}</strong></div>
-                <div><span>Recheio chocolate</span><strong>{product.chocolate}</strong></div>
+                {product.fillings.map((filling) => (
+                  <WhatsAppLink
+                    className="product-price-link"
+                    key={filling.name}
+                    message={`Olá, quero reservar o panetone ${product.name.toLowerCase()} de ${product.weight} com recheio ${filling.name}.`}
+                  >
+                    <span>{filling.name === 'Sem recheio' ? filling.name : `Recheio ${filling.name}`}</span>
+                    <strong>{filling.price}</strong>
+                  </WhatsAppLink>
+                ))}
               </div>
-              <WhatsAppLink className="product-order">Pedir este tamanho <ArrowIcon /></WhatsAppLink>
+              <WhatsAppLink className="product-order" message={`Olá, quero reservar o panetone ${product.name.toLowerCase()} de ${product.weight}.`}>Pedir este tamanho <ArrowIcon /></WhatsAppLink>
             </article>
           ))}
         </div>
