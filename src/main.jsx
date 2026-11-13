@@ -140,7 +140,6 @@ function App() {
         </div>
 
         <div className="hero-visual">
-          <div className="hero-sticker">Feito<br />com afeto</div>
           <div className="hero-image-frame">
             <img src={photos[selectedPhoto].src} alt={photos[selectedPhoto].alt} />
           </div>
@@ -203,7 +202,7 @@ function App() {
             <p className="eyebrow">Escolha o seu</p>
             <h2>Tem um tamanho<br /><em>para cada mesa.</em></h2>
           </div>
-          <p>Escolha o tamanho, clique no preço do sabor desejado e envie seu pedido direto pelo WhatsApp.</p>
+          <p>Escolha o tamanho, clique no preço do sabor desejado e envie seu pedido direto pelo WhatsApp. Na opção sem recheio, você pode escolher gotas de chocolate ou frutas cristalizadas.</p>
         </div>
         <div className="product-grid">
           {products.map((product, index) => (
@@ -216,7 +215,9 @@ function App() {
                   <WhatsAppLink
                     className="product-price-link"
                     key={filling.name}
-                    message={`Olá, quero reservar o panetone ${product.name.toLowerCase()} de ${product.weight} com recheio ${filling.name}.`}
+                    message={filling.name === 'Sem recheio'
+                      ? `Olá, quero reservar o panetone ${product.name.toLowerCase()} de ${product.weight} sem recheio. Quero escolher entre gotas de chocolate ou frutas cristalizadas.`
+                      : `Olá, quero reservar o panetone ${product.name.toLowerCase()} de ${product.weight} com recheio ${filling.name}.`}
                   >
                     <span>{filling.name === 'Sem recheio' ? filling.name : `Recheio ${filling.name}`}</span>
                     <strong>{filling.price}</strong>

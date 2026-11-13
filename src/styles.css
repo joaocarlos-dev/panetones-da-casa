@@ -60,7 +60,6 @@ img { display: block; max-width: 100%; }
 .hero-image-frame { aspect-ratio: .82; background: #d8bca2; overflow: hidden; position: relative; }
 .hero-image-frame::after { border: 1px solid rgba(255,255,255,.5); content: ''; inset: 13px; pointer-events: none; position: absolute; }
 .hero-image-frame img { height: 100%; object-fit: cover; width: 100%; }
-.hero-sticker { align-items: center; background: var(--green); border-radius: 50%; color: #f8f0e3; display: flex; font-family: 'Playfair Display', serif; font-size: 18px; height: 104px; justify-content: center; line-height: 1.05; position: absolute; right: -31px; text-align: center; top: 16%; transform: rotate(10deg); width: 104px; z-index: 2; }
 .hero-caption { align-items: center; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; padding: 14px 2px; }
 .hero-caption span { color: var(--terra); font-size: 10px; font-weight: 700; letter-spacing: .15em; }
 .hero-caption strong { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 500; }
@@ -183,7 +182,6 @@ img { display: block; max-width: 100%; }
   .hero { min-height: auto; padding-bottom: 64px; padding-top: 52px; }
   .hero h1 { font-size: clamp(45px, 15vw, 66px); }
   .hero-description { font-size: 14px; }
-  .hero-sticker { height: 86px; font-size: 15px; right: -7px; width: 86px; }
   .trust-items { align-items: flex-start; flex-direction: column; gap: 11px; padding: 18px 0; }
   .kit-section { padding-bottom: 100px; padding-top: 93px; }
   .kit-card-content { padding: 38px 25px 32px; }
