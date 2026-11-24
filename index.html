@@ -26,12 +26,13 @@
             <p class="hero-description">Panetones macios, cheios de sabor e feitos em pequena escala para deixar seu fim de ano ainda mais gostoso.</p>
             <div class="hero-actions">
               <a class="button button-primary" href="#kit">Conheça o kit <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg></a>
+              <a class="button button-secondary" href="./public/cardapio-resumido.jpg" target="_blank" rel="noreferrer">Ver cardápio completo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg></a>
               <span class="fresh-note"><span class="spark">✦</span> Feito sob encomenda</span>
             </div>
           </div>
           <div class="hero-visual">
-            <div class="hero-image-frame"><img id="hero-photo" src="./public/images/panetone-cortado.png" alt="Panetone de chocolate cortado em fatias" /></div>
-            <div class="hero-caption"><span id="hero-index">01 — 04</span><strong id="hero-label">Macio por dentro</strong></div>
+            <button class="image-button hero-image-frame" type="button" onclick="openPhoto(0)" aria-label="Ampliar foto: Macio por dentro"><img id="hero-photo" src="./public/images/panetone-cortado.png" alt="Panetone de chocolate cortado em fatias" /></button>
+            <div class="hero-caption"><span id="hero-index">01 — 07</span><strong id="hero-label">Macio por dentro</strong></div>
           </div>
         </section>
 
@@ -40,7 +41,7 @@
         <section class="kit-section section-shell" id="kit">
           <div class="section-heading"><p class="eyebrow">A escolha da casa</p><h2>Kit Família</h2><p>Dois tamanhos para ter sempre um pedaço a mais na mesa.</p></div>
           <div class="kit-card">
-            <div class="kit-card-image"><img src="./public/images/panetone-recheado.png" alt="Panetone recheado cortado ao meio" /><span class="image-note">Uma fornada, dois momentos.</span></div>
+            <button class="image-button kit-card-image" type="button" onclick="openPhoto(1)" aria-label="Ampliar foto do kit Família"><img src="./public/images/panetone-recheado.png" alt="Panetone recheado cortado ao meio" /><span class="image-note">Uma fornada, dois momentos.</span></button>
             <div class="kit-card-content">
               <div class="kit-card-topline"><span>Kit promocional</span><span>Disponível sob encomenda</span></div>
               <h3>Para reunir<br /><em>todo mundo.</em></h3>
@@ -64,39 +65,94 @@
         <section class="gallery-section section-shell">
           <div class="gallery-heading"><div><p class="eyebrow">Da nossa cozinha</p><h2>É de dar água na boca.</h2></div><p>Textura macia, recheio generoso e aquele cheirinho de fornada recém-saída.</p></div>
           <div class="gallery-grid">
-            <button class="gallery-photo is-selected" type="button" aria-label="Ver foto: Macio por dentro" aria-pressed="true" onclick="selectPhoto(0)"><img src="./public/images/panetone-cortado.png" alt="Panetone de chocolate cortado em fatias" /><span>01</span></button>
-            <button class="gallery-photo" type="button" aria-label="Ver foto: Muito recheio" aria-pressed="false" onclick="selectPhoto(1)"><img src="./public/images/panetone-recheado.png" alt="Panetone recheado com chocolate" /><span>02</span></button>
-            <button class="gallery-photo" type="button" aria-label="Ver foto: Feito à mão" aria-pressed="false" onclick="selectPhoto(2)"><img src="./public/images/panetone-inteiro.png" alt="Panetone artesanal inteiro com gotas de chocolate" /><span>03</span></button>
-            <button class="gallery-photo" type="button" aria-label="Ver foto: Fornada fresca" aria-pressed="false" onclick="selectPhoto(3)"><img src="./public/images/panetone-forno.png" alt="Panetone artesanal saindo do forno" /><span>04</span></button>
+            <button class="gallery-photo is-selected" type="button" aria-label="Ver foto: Macio por dentro" aria-pressed="true" onclick="openPhoto(0)"><img src="./public/images/panetone-cortado.png" alt="Panetone de chocolate cortado em fatias" /><span>01</span></button>
+            <button class="gallery-photo" type="button" aria-label="Ver foto: Muito recheio" aria-pressed="false" onclick="openPhoto(1)"><img src="./public/images/panetone-recheado.png" alt="Panetone recheado com chocolate" /><span>02</span></button>
+            <button class="gallery-photo" type="button" aria-label="Ver foto: Corte aberto" aria-pressed="false" onclick="openPhoto(2)"><img src="./public/images/catalogo/catalogo-corte-aberto.jpg" alt="Panetone recheado aberto mostrando o corte por dentro" /><span>03</span></button>
+            <button class="gallery-photo" type="button" aria-label="Ver foto: Fatia generosa" aria-pressed="false" onclick="openPhoto(3)"><img src="./public/images/catalogo/catalogo-fatia-generosa.jpg" alt="Fatia generosa de panetone recheado na mão" /><span>04</span></button>
+            <button class="gallery-photo" type="button" aria-label="Ver foto: Textura por dentro" aria-pressed="false" onclick="openPhoto(4)"><img src="./public/images/catalogo/catalogo-fatia-na-mao.jpg" alt="Fatia de panetone recheado na mão" /><span>05</span></button>
+            <button class="gallery-photo" type="button" aria-label="Ver foto: Fornada fresca" aria-pressed="false" onclick="openPhoto(5)"><img src="./public/images/catalogo/catalogo-inteiro.jpg" alt="Panetone artesanal inteiro com gotas de chocolate" /><span>06</span></button>
+            <button class="gallery-photo" type="button" aria-label="Ver foto: Para compartilhar" aria-pressed="false" onclick="openPhoto(6)"><img src="./public/images/catalogo/catalogo-inteiros.jpg" alt="Dois panetones artesanais inteiros" /><span>07</span></button>
           </div>
         </section>
+
+        <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden onclick="closePhoto()">
+          <div class="lightbox-content" onclick="event.stopPropagation()">
+            <button class="lightbox-close" type="button" onclick="closePhoto()" aria-label="Fechar foto ampliada">×</button>
+            <button class="lightbox-image-button" id="lightbox-image-button" type="button" onclick="toggleZoom()" aria-label="Aumentar foto"><img class="lightbox-image" id="lightbox-image" src="./public/images/panetone-cortado.png" alt="" /></button>
+            <p class="lightbox-caption" id="lightbox-caption">Macio por dentro · clique na foto para dar zoom</p>
+          </div>
+        </div>
 
         <section class="order-section section-shell"><div class="order-card"><div><p class="eyebrow">A próxima fatia pode ser sua</p><h2>Reserve seu pedido.</h2><p>Chame no WhatsApp para escolher o tamanho, o recheio e combinar a entrega.</p></div><a class="button button-light" data-whatsapp href="https://wa.me/5516991348643" target="_blank" rel="noreferrer">Quero pedir</a></div></section>
         <footer class="site-footer section-shell"><span>Panetones da casa</span><span>Pequenos lotes, grandes encontros.</span><a href="#top">Voltar ao topo ↑</a></footer>
       </main>
     </div>
     <script>
+      let activePhotoIndex = 0
+      const staticAssetRoot = window.location.protocol === 'file:' ? './public/' : './'
+      const staticAssetPath = (path) => `${staticAssetRoot}${path}`
+      document.querySelectorAll('img[src^="./public/"]').forEach((image) => {
+        image.src = image.getAttribute('src').replace('./public/', staticAssetRoot)
+      })
+      document.querySelectorAll('a[href^="./public/"]').forEach((link) => {
+        link.href = link.getAttribute('href').replace('./public/', staticAssetRoot)
+      })
       const photos = [
-        ['./public/images/panetone-cortado.png', 'Panetone de chocolate cortado em fatias', 'Macio por dentro'],
-        ['./public/images/panetone-recheado.png', 'Panetone recheado com chocolate', 'Muito recheio'],
-        ['./public/images/panetone-inteiro.png', 'Panetone artesanal inteiro com gotas de chocolate', 'Feito à mão'],
-        ['./public/images/panetone-forno.png', 'Panetone artesanal saindo do forno', 'Fornada fresca'],
+        [staticAssetPath('images/panetone-cortado.png'), 'Panetone de chocolate cortado em fatias', 'Macio por dentro'],
+        [staticAssetPath('images/panetone-recheado.png'), 'Panetone recheado com chocolate', 'Muito recheio'],
+        [staticAssetPath('images/catalogo/catalogo-corte-aberto.jpg'), 'Panetone recheado aberto mostrando o corte por dentro', 'Corte aberto'],
+        [staticAssetPath('images/catalogo/catalogo-fatia-generosa.jpg'), 'Fatia generosa de panetone recheado na mão', 'Fatia generosa'],
+        [staticAssetPath('images/catalogo/catalogo-fatia-na-mao.jpg'), 'Fatia de panetone recheado na mão', 'Textura por dentro'],
+        [staticAssetPath('images/catalogo/catalogo-inteiro.jpg'), 'Panetone artesanal inteiro com gotas de chocolate', 'Fornada fresca'],
+        [staticAssetPath('images/catalogo/catalogo-inteiros.jpg'), 'Dois panetones artesanais inteiros', 'Para compartilhar'],
       ]
       document.querySelectorAll('[data-whatsapp]').forEach((link) => {
         const message = link.dataset.message || 'Olá, quero encomendar um panetone'
         link.href = `https://wa.me/5516991348643?text=${encodeURIComponent(message)}`
       })
       function selectPhoto(index) {
+        activePhotoIndex = index
         const photo = photos[index]
         document.getElementById('hero-photo').src = photo[0]
         document.getElementById('hero-photo').alt = photo[1]
-        document.getElementById('hero-index').textContent = `${String(index + 1).padStart(2, '0')} — 04`
+        document.getElementById('hero-index').textContent = `${String(index + 1).padStart(2, '0')} — ${String(photos.length).padStart(2, '0')}`
         document.getElementById('hero-label').textContent = photo[2]
         document.querySelectorAll('.gallery-photo').forEach((button, buttonIndex) => {
           button.classList.toggle('is-selected', buttonIndex === index)
           button.setAttribute('aria-pressed', buttonIndex === index)
         })
       }
+      function openPhoto(index) {
+        selectPhoto(index)
+        const photo = photos[index]
+        const lightbox = document.getElementById('lightbox')
+        const image = document.getElementById('lightbox-image')
+        const imageButton = document.getElementById('lightbox-image-button')
+        image.src = photo[0]
+        image.alt = photo[1]
+        image.classList.remove('is-zoomed')
+        imageButton.classList.remove('is-zoomed')
+        imageButton.setAttribute('aria-label', 'Aumentar foto')
+        document.getElementById('lightbox-caption').textContent = `${photo[2]} · clique na foto para dar zoom`
+        lightbox.hidden = false
+        document.body.style.overflow = 'hidden'
+      }
+      function closePhoto() {
+        document.getElementById('lightbox').hidden = true
+        document.body.style.overflow = ''
+      }
+      function toggleZoom() {
+        const image = document.getElementById('lightbox-image')
+        const imageButton = document.getElementById('lightbox-image-button')
+        const zoomed = image.classList.toggle('is-zoomed')
+        imageButton.classList.toggle('is-zoomed', zoomed)
+        imageButton.setAttribute('aria-label', zoomed ? 'Reduzir foto' : 'Aumentar foto')
+        const photo = photos[activePhotoIndex]
+        document.getElementById('lightbox-caption').textContent = `${photo[2]} · clique na foto para ${zoomed ? 'reduzir' : 'dar zoom'}`
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && document.getElementById('lightbox')) closePhoto()
+      })
     </script>
     <script type="module" src="./src/main.jsx"></script>
   </body>

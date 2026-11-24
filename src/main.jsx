@@ -1,4 +1,4 @@
-import { StrictMode, useState } from 'react'
+import { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles.css'
 
@@ -16,14 +16,29 @@ const photos = [
     label: 'Muito recheio',
   },
   {
-    src: 'images/panetone-inteiro.png',
-    alt: 'Panetone artesanal inteiro com gotas de chocolate',
-    label: 'Feito à mão',
+    src: 'images/catalogo/catalogo-corte-aberto.jpg',
+    alt: 'Panetone recheado aberto mostrando o corte por dentro',
+    label: 'Corte aberto',
   },
   {
-    src: 'images/panetone-forno.png',
-    alt: 'Panetone artesanal saindo do forno',
+    src: 'images/catalogo/catalogo-fatia-generosa.jpg',
+    alt: 'Fatia generosa de panetone recheado na mão',
+    label: 'Fatia generosa',
+  },
+  {
+    src: 'images/catalogo/catalogo-fatia-na-mao.jpg',
+    alt: 'Fatia de panetone recheado na mão',
+    label: 'Textura por dentro',
+  },
+  {
+    src: 'images/catalogo/catalogo-inteiro.jpg',
+    alt: 'Panetone artesanal inteiro com gotas de chocolate',
     label: 'Fornada fresca',
+  },
+  {
+    src: 'images/catalogo/catalogo-inteiros.jpg',
+    alt: 'Dois panetones artesanais inteiros',
+    label: 'Para compartilhar',
   },
 ]
 
@@ -108,6 +123,31 @@ function WhatsAppLink({ children, className, message }) {
 
 function App() {
   const [selectedPhoto, setSelectedPhoto] = useState(0)
+  const [lightboxPhoto, setLightboxPhoto] = useState(null)
+  const [zoomed, setZoomed] = useState(false)
+
+  function openPhoto(index) {
+    setSelectedPhoto(index)
+    setLightboxPhoto(photos[index])
+    setZoomed(false)
+  }
+
+  function closePhoto() {
+    setLightboxPhoto(null)
+    setZoomed(false)
+  }
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setLightboxPhoto(null)
+        setZoomed(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   return (
     <main>
@@ -135,16 +175,19 @@ function App() {
             <a className="button button-primary" href="#kit">
               Conheça o kit <ArrowIcon />
             </a>
+            <a className="button button-secondary" href="cardapio-resumido.jpg" target="_blank" rel="noreferrer">
+              Ver cardápio completo <ArrowIcon />
+            </a>
             <span className="fresh-note"><span className="spark">✦</span> Feito sob encomenda</span>
           </div>
         </div>
 
         <div className="hero-visual">
-          <div className="hero-image-frame">
+          <button className="image-button hero-image-frame" type="button" onClick={() => openPhoto(selectedPhoto)} aria-label={`Ampliar foto: ${photos[selectedPhoto].label}`}>
             <img src={photos[selectedPhoto].src} alt={photos[selectedPhoto].alt} />
-          </div>
+          </button>
           <div className="hero-caption">
-            <span>01 — 04</span>
+            <span>01 — {String(photos.length).padStart(2, '0')}</span>
             <strong>{photos[selectedPhoto].label}</strong>
           </div>
         </div>
@@ -166,10 +209,10 @@ function App() {
         </div>
 
         <div className="kit-card">
-          <div className="kit-card-image">
+          <button className="image-button kit-card-image" type="button" onClick={() => openPhoto(1)} aria-label="Ampliar foto do kit Família">
             <img src="images/panetone-recheado.png" alt="Panetone recheado cortado ao meio" />
             <span className="image-note">Uma fornada, dois momentos.</span>
-          </div>
+          </button>
           <div className="kit-card-content">
             <div className="kit-card-topline"><span>Kit promocional</span><span>Disponível sob encomenda</span></div>
             <h3>Para reunir<br /><em>todo mundo.</em></h3>
@@ -242,7 +285,7 @@ function App() {
               className={`gallery-photo ${index === selectedPhoto ? 'is-selected' : ''}`}
               type="button"
               key={photo.src}
-              onClick={() => setSelectedPhoto(index)}
+              onClick={() => openPhoto(index)}
               aria-label={`Ver foto: ${photo.label}`}
               aria-pressed={index === selectedPhoto}
             >
@@ -252,6 +295,18 @@ function App() {
           ))}
         </div>
       </section>
+
+      {lightboxPhoto && (
+        <div className="lightbox" role="dialog" aria-modal="true" aria-label={`Foto ampliada: ${lightboxPhoto.label}`} onClick={closePhoto}>
+          <div className="lightbox-content" onClick={(event) => event.stopPropagation()}>
+            <button className="lightbox-close" type="button" onClick={closePhoto} aria-label="Fechar foto ampliada">×</button>
+            <button className={`lightbox-image-button ${zoomed ? 'is-zoomed' : ''}`} type="button" onClick={() => setZoomed((current) => !current)} aria-label={zoomed ? 'Reduzir foto' : 'Aumentar foto'}>
+              <img className={`lightbox-image ${zoomed ? 'is-zoomed' : ''}`} src={lightboxPhoto.src} alt={lightboxPhoto.alt} />
+            </button>
+            <p className="lightbox-caption">{lightboxPhoto.label} · clique na foto para {zoomed ? 'reduzir' : 'dar zoom'}</p>
+          </div>
+        </div>
+      )}
 
       <section className="order-section section-shell">
         <div className="order-card">
