@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, useState } from 'react'
+import { StrictMode, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles.css'
 
@@ -125,16 +125,69 @@ function App() {
   const [selectedPhoto, setSelectedPhoto] = useState(0)
   const [lightboxPhoto, setLightboxPhoto] = useState(null)
   const [zoomed, setZoomed] = useState(false)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [dragging, setDragging] = useState(false)
+  const dragRef = useRef(null)
+  const suppressClickRef = useRef(false)
 
   function openPhoto(index) {
     setSelectedPhoto(index)
     setLightboxPhoto(photos[index])
     setZoomed(false)
+    setPan({ x: 0, y: 0 })
   }
 
   function closePhoto() {
     setLightboxPhoto(null)
     setZoomed(false)
+    setPan({ x: 0, y: 0 })
+  }
+
+  function toggleZoom() {
+    setZoomed((current) => {
+      if (current) setPan({ x: 0, y: 0 })
+      return !current
+    })
+  }
+
+  function handleImagePointerDown(event) {
+    if (!zoomed) return
+    event.preventDefault()
+    event.currentTarget.setPointerCapture(event.pointerId)
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      startPan: pan,
+      moved: false,
+    }
+    setDragging(true)
+  }
+
+  function handleImagePointerMove(event) {
+    const drag = dragRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+    const deltaX = event.clientX - drag.startX
+    const deltaY = event.clientY - drag.startY
+    if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) drag.moved = true
+    setPan({ x: drag.startPan.x + deltaX, y: drag.startPan.y + deltaY })
+  }
+
+  function handleImagePointerUp(event) {
+    const drag = dragRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+    if (drag.moved) suppressClickRef.current = true
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
+    dragRef.current = null
+    setDragging(false)
+  }
+
+  function handleImageClick() {
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false
+      return
+    }
+    toggleZoom()
   }
 
   useEffect(() => {
@@ -300,10 +353,10 @@ function App() {
         <div className="lightbox" role="dialog" aria-modal="true" aria-label={`Foto ampliada: ${lightboxPhoto.label}`} onClick={closePhoto}>
           <div className="lightbox-content" onClick={(event) => event.stopPropagation()}>
             <button className="lightbox-close" type="button" onClick={closePhoto} aria-label="Fechar foto ampliada">×</button>
-            <button className={`lightbox-image-button ${zoomed ? 'is-zoomed' : ''}`} type="button" onClick={() => setZoomed((current) => !current)} aria-label={zoomed ? 'Reduzir foto' : 'Aumentar foto'}>
-              <img className={`lightbox-image ${zoomed ? 'is-zoomed' : ''}`} src={lightboxPhoto.src} alt={lightboxPhoto.alt} />
+            <button className={`lightbox-image-button ${zoomed ? 'is-zoomed' : ''} ${dragging ? 'is-dragging' : ''}`} type="button" onClick={handleImageClick} onPointerDown={handleImagePointerDown} onPointerMove={handleImagePointerMove} onPointerUp={handleImagePointerUp} onPointerCancel={handleImagePointerUp} aria-label={zoomed ? 'Arrastar ou reduzir foto' : 'Aumentar foto'}>
+              <img className="lightbox-image" src={lightboxPhoto.src} alt={lightboxPhoto.alt} draggable="false" style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoomed ? 1.55 : 1})` }} />
             </button>
-            <p className="lightbox-caption">{lightboxPhoto.label} · clique na foto para {zoomed ? 'reduzir' : 'dar zoom'}</p>
+            <p className="lightbox-caption">{lightboxPhoto.label} · {zoomed ? 'arraste para explorar ou clique para reduzir' : 'clique na foto para dar zoom'}</p>
           </div>
         </div>
       )}
@@ -322,7 +375,6 @@ function App() {
       </section>
 
       <footer className="site-footer section-shell">
-        <span>Panetones da casa</span>
         <span>Pequenos lotes, grandes encontros.</span>
         <a href="#top">Voltar ao topo ↑</a>
       </footer>
